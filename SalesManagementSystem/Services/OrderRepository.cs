@@ -4,7 +4,7 @@ namespace SalesManagementSystem.Services
 {
     public class OrderRepository : IOrder
     {
-        static List<Order> orders = new();
+        public static List<Order> orders = new();
         public void CreateOrder(Guid userId,Order order)
         {
             order.CustomerId = userId;

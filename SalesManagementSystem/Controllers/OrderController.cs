@@ -69,8 +69,8 @@ namespace SalesManagementSystem.Controllers
             {
                 return NotFound("User not found");
             }
-            Order currenOrder = _order.GetUserOrder(userId, orderId);
-            if (currenOrder is not null)
+            Order currentOrder = _order.GetUserOrder(userId, orderId);
+            if (currentOrder is not null)
             {
                 _order.UpdateOrderQuantity(orderId, userId, quantity);
                 return Ok("Updated successfully");

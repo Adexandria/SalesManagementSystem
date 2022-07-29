@@ -2,8 +2,8 @@
 {
     public enum OrderStatus
     {
-        NotPaid,
-        Processing,
+        Pending,
+        NotPaid,  
         Paid
             
     }

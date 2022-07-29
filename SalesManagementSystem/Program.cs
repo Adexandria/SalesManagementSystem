@@ -8,7 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IUser, UserRepository>();
 builder.Services.AddSingleton<IOrder, OrderRepository>();
 builder.Services.AddSingleton<IGood, GoodRepository>();
-
+builder.Services.AddSingleton<IPayment, PaymentRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
