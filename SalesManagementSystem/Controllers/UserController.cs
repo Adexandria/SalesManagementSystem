@@ -22,7 +22,7 @@ namespace SalesManagementSystem.Controllers
             if (!usernameExist)
             {
                 _user.CreateUser(user);
-                return Ok();
+                return Ok("User created successfully");
             }
             return BadRequest("This username already exist");
         }
@@ -34,7 +34,7 @@ namespace SalesManagementSystem.Controllers
             if(exist)
             {
                 _user.UpdateUserEmail(userId, email);
-                return Ok();
+                return Ok("Updated successfully");
             }
             return NotFound("User not found");
         }
@@ -46,7 +46,7 @@ namespace SalesManagementSystem.Controllers
             if (exist)
             {
                 _user.UpdateUserPassword(userId, password);
-                return Ok();
+                return Ok("Updated successfully");
             }
             return NotFound("User not found");
         }
@@ -58,7 +58,7 @@ namespace SalesManagementSystem.Controllers
             if (exist)
             {
                 _user.UpdateUserName(userId, username);
-                return Ok();
+                return Ok("Updated successfully");
             }
             return NotFound("User not found");
         }
@@ -70,7 +70,7 @@ namespace SalesManagementSystem.Controllers
             if (exist)
             {
                 _user.DeleteUser(userId);
-                return Ok();
+                return Ok("Deleted successfully");
             }
             return NotFound("User not found");
         }

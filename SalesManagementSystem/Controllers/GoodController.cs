@@ -6,11 +6,11 @@ namespace SalesManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GoodController : ControllerBase
+    public class GoodsController : ControllerBase
     {
         private readonly IGood _good;
 
-        public GoodController(IGood good)
+        public GoodsController(IGood good)
         {
             _good = good;
         }
@@ -52,14 +52,50 @@ namespace SalesManagementSystem.Controllers
 
         }
 
-        [HttpPut("{goodId}")]
+        [HttpPut("{goodId}/name")]
         public IActionResult UpdateGoodByName(Guid goodId, string name)
         {
             Good good = _good.GetGood(goodId);
             if (good is not null)
             {
                 _good.UpdateGoodName(goodId, name);
-                return Ok(good);
+                return Ok("Updated successfully");
+            }
+            return NotFound();
+        }
+        
+        [HttpPut("{goodId}/Price")]
+        public IActionResult UpdateGoodByPrice(Guid goodId, float price)
+        {
+            Good good = _good.GetGood(goodId);
+            if (good is not null)
+            {
+                _good.UpdateGoodPrice(goodId, price);
+                return Ok("Updated successfully");
+            }
+            return NotFound();
+        }
+
+        [HttpPut("{goodId}/Quantity")]
+        public IActionResult UpdateGoodByQuantity(Guid goodId, int quantity)
+        {
+            Good good = _good.GetGood(goodId);
+            if (good is not null)
+            {
+                _good.UpdateGoodQuantity(goodId, quantity);
+                return Ok("Updated successfully");
+            }
+            return NotFound();
+        }
+
+        [HttpDelete("{goodId}")]
+        public IActionResult DeleteGood(Guid goodId)
+        {
+            Good good = _good.GetGood(goodId);
+            if (good is not null)
+            {
+                _good.DeleteGood(goodId);
+                return Ok("Deleted successfully");
             }
             return NotFound();
         }
