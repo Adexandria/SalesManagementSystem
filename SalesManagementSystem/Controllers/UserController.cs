@@ -28,7 +28,7 @@ namespace SalesManagementSystem.Controllers
         }
         
         [HttpPut("{userId}/email")]
-        public IActionResult UpdateUserEmail(Guid userId, string email)
+        public IActionResult UpdateUserEmail(Guid userId, [FromBody] string email)
         {
             bool exist = _user.IsUserExist(userId);
             if(exist)
@@ -40,7 +40,7 @@ namespace SalesManagementSystem.Controllers
         }
         
         [HttpPut("{userId}/password")]
-        public IActionResult UpdateUserPassword(Guid userId, string password)
+        public IActionResult UpdateUserPassword(Guid userId, [FromBody] string password)
         {
             bool exist = _user.IsUserExist(userId);
             if (exist)
@@ -52,7 +52,7 @@ namespace SalesManagementSystem.Controllers
         }
         
         [HttpPut("{userId}/username")]
-        public IActionResult UpdateUserName(Guid userId, string username)
+        public IActionResult UpdateUserName(Guid userId, [FromBody] string username)
         {
             bool exist = _user.IsUserExist(userId);
             if (exist)

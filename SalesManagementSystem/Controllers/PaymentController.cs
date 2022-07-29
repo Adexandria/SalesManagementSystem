@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SalesManagementSystem.Model;
 using SalesManagementSystem.Services;
 
@@ -12,16 +11,42 @@ namespace SalesManagementSystem.Controllers
         private readonly IPayment _payment;
         private readonly IOrder _order;
         private readonly IUser _user;
+        private readonly IGood _good;
 
 
-        public PaymentController(IPayment payment, IOrder order, IUser user)
+        public PaymentController(IPayment payment, IOrder order, IUser user, IGood good)
         {
             _payment = payment;
             _order = order;
             _user = user;
+            _good = good;
         }
 
-        [HttpPost("Pay")]
+        [HttpGet]
+        public IActionResult Getpayment(Guid userId,Guid orderId)
+        {
+            bool isExist = _user.IsUserExist(userId);
+            if (!isExist)
+            {
+                return NotFound("User not found");
+            }
+            
+            Order currentOrder = _order.GetUserOrder(userId, orderId);
+            if (currentOrder is null)
+            {
+                return NotFound("order not found");
+            }
+            
+            Payment currentPayment = _payment.GetOrderPayment(orderId);
+            if(currentPayment is null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(currentPayment);
+        }
+        
+        [HttpPost]
         public IActionResult Pay(Guid userId, Guid orderId, [FromBody] float amount)
         {
             bool isExist = _user.IsUserExist(userId);
@@ -29,11 +54,13 @@ namespace SalesManagementSystem.Controllers
             {
                 return NotFound("User not found");
             }
+            
             Order currentOrder = _order.GetUserOrder(userId, orderId);
             if (currentOrder is null)
             {
                 return NotFound("order not found");
             }
+            
             bool isValid = _payment.IsPaymentValid(orderId);
             if (isValid)
             {
@@ -44,8 +71,10 @@ namespace SalesManagementSystem.Controllers
             if (isSuccessful)
             {
                _order.UpdateUserOrderStatus(userId, orderId, OrderStatus.Paid);
+               _good.UpdateOrderGoodQuantity(currentOrder.GoodId, currentOrder.Quantity);
                return Ok("Payment successful");
             }
+            
             _order.UpdateUserOrderStatus(userId, orderId, OrderStatus.NotPaid);
             return BadRequest("Payment failed");
             
@@ -59,11 +88,13 @@ namespace SalesManagementSystem.Controllers
             {
                 return NotFound("User not found");
             }
+            
             Order currentOrder = _order.GetUserOrder(userId, orderId);
             if (currentOrder is null)
             {
                 return NotFound("order not found");
             }
+            
             bool isValid = _payment.IsPaymentValid(orderId);
             if (!isValid)
             {
@@ -76,6 +107,7 @@ namespace SalesManagementSystem.Controllers
                 _order.UpdateUserOrderStatus(userId, orderId, OrderStatus.Paid);
                 return Ok("Payment successful");
             }
+            
             _order.UpdateUserOrderStatus(userId, orderId, OrderStatus.NotPaid);
             return BadRequest("Payment failed");
         }

@@ -22,6 +22,12 @@ namespace SalesManagementSystem.Services
             return false;
         }
 
+        public Payment GetOrderPayment(Guid orderId)
+        {
+            Payment payment = payments.FirstOrDefault(s => s.OrderId == orderId);
+            return payment;
+        }
+
         public bool IsPaymentValid(Guid orderId)
         {
             Payment currentPayment = payments.FirstOrDefault(s => s.OrderId == orderId);
@@ -34,7 +40,7 @@ namespace SalesManagementSystem.Services
 
         public bool UpdatePayment(Guid orderId, float amount)
         {
-            Payment currentPayment = payments.FirstOrDefault(s => s.OrderId == orderId);
+            Payment currentPayment = GetOrderPayment(orderId);
             if (currentPayment is not null)
             {
                 currentPayment.Balance -= amount;

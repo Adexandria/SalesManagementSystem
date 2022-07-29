@@ -37,11 +37,7 @@ namespace SalesManagementSystem.Controllers
         public IActionResult SearchItemByName(string name)
         {
             List<Good> good = _good.GetGoodByName(name);
-            if (good is not null)
-            {
-                return Ok(good);
-            }
-            return NotFound();
+            return Ok(good);
         }
 
         [HttpPost]
@@ -53,7 +49,7 @@ namespace SalesManagementSystem.Controllers
         }
 
         [HttpPut("{goodId}/name")]
-        public IActionResult UpdateGoodByName(Guid goodId, string name)
+        public IActionResult UpdateGoodByName(Guid goodId, [FromBody] string name)
         {
             Good good = _good.GetGood(goodId);
             if (good is not null)
@@ -65,7 +61,7 @@ namespace SalesManagementSystem.Controllers
         }
         
         [HttpPut("{goodId}/Price")]
-        public IActionResult UpdateGoodByPrice(Guid goodId, float price)
+        public IActionResult UpdateGoodByPrice(Guid goodId, [FromBody] float price)
         {
             Good good = _good.GetGood(goodId);
             if (good is not null)
@@ -77,7 +73,7 @@ namespace SalesManagementSystem.Controllers
         }
 
         [HttpPut("{goodId}/Quantity")]
-        public IActionResult UpdateGoodByQuantity(Guid goodId, int quantity)
+        public IActionResult UpdateGoodByQuantity(Guid goodId, [FromBody] int quantity)
         {
             Good good = _good.GetGood(goodId);
             if (good is not null)

@@ -71,6 +71,7 @@ namespace SalesManagementSystem.Services
         
         private void EncryptPassword(User user,string password)
         {
+            //learn how to encode using utf8
             var encodedPassword = Encoding.UTF8.GetBytes(user.Password).ToString();
             user.Password = encodedPassword;
         }

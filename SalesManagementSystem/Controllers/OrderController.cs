@@ -56,20 +56,31 @@ namespace SalesManagementSystem.Controllers
             {
                 return NotFound("item not found");
             }
+            if(order.Quantity > currentGood.Quantity)
+            {
+                return BadRequest("This quantity is unavailable");
+            }
             _order.CreateOrder(userId, order);
             return CreatedAtRoute("GetOrder", new { userId, orderId = order.OrderId }, order);
 
         }
 
         [HttpPut("{orderId}/Quantity")]
-        public IActionResult UpdateOrderQuantity(Guid userId, Guid orderId, int quantity)
+        public IActionResult UpdateOrderQuantity(Guid userId, Guid orderId,[FromBody] int quantity)
         {
             bool isExist = _user.IsUserExist(userId);
             if (!isExist)
             {
                 return NotFound("User not found");
             }
+
             Order currentOrder = _order.GetUserOrder(userId, orderId);
+            Good currentGood = _good.GetGood(currentOrder.GoodId);
+            if (currentOrder.Quantity > currentGood.Quantity)
+            {
+                return BadRequest("This quantity is unavailable");
+            }
+
             if (currentOrder is not null)
             {
                 _order.UpdateOrderQuantity(orderId, userId, quantity);
@@ -86,8 +97,9 @@ namespace SalesManagementSystem.Controllers
             {
                 return NotFound("User not found");
             }
-            Order currenOrder = _order.GetUserOrder(userId, orderId);
-            if (currenOrder is not null)
+
+            Order currentOrder = _order.GetUserOrder(userId, orderId);
+            if (currentOrder is not null)
             {
                 _order.DeleteOrder(orderId, userId);
                 return Ok("Deleted successfully");

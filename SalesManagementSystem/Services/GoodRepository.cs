@@ -18,7 +18,7 @@ namespace SalesManagementSystem.Services
         //Search Goods by Name
         public List<Good> GetGoodByName(string name)
         {
-            return goods.Where(s => s.Name.Contains(name)).ToList();
+            return goods.Where(s => s.Name.StartsWith(name)).ToList();
         }
 
         public void CreateGood(Good good)
@@ -67,6 +67,13 @@ namespace SalesManagementSystem.Services
             
         }
 
-       
+        public void UpdateOrderGoodQuantity(Guid goodId, int quantity)
+        {
+            Good good = GetGood(goodId);
+            if(good is not null)
+            {
+                good.Quantity -= quantity; 
+            }
+        }
     }
 }

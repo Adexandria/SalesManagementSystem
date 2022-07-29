@@ -8,6 +8,7 @@ namespace SalesManagementSystem.Services
         List<Good> GetGoodByName(string name);
         Good GetGood(Guid goodId);
         void CreateGood(Good good);
+        void UpdateOrderGoodQuantity(Guid goodId, int quantity);
         void UpdateGoodName(Guid goodId, string name);
         void UpdateGoodPrice(Guid goodId, float price);
         void UpdateGoodQuantity(Guid goodId, int quantity);
