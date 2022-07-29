@@ -4,9 +4,11 @@ namespace SalesManagementSystem.Services
 {
     public class OrderRepository : IOrder
     {
-        List<Order> orders = new();
-        public void CreateOrder(Order order)
+        static List<Order> orders = new();
+        public void CreateOrder(Guid userId,Order order)
         {
+            order.CustomerId = userId;
+            order.Amount = GetTotalPrice(order,order.GoodId);
             orders.Add(order);
         }
 
@@ -22,15 +24,6 @@ namespace SalesManagementSystem.Services
             return orders.Where(s => s.CustomerId == userId).ToList();
         }
 
-        public void UpdateOrderItemQuantity(Guid orderId, Guid userId, Guid itemId, int quantity)
-        {
-            Order order = GetUserOrder(userId, orderId);
-            Good good = order.Goods.FirstOrDefault(x=>x.GoodId == itemId);
-            if(good is not null)
-            {
-                good.Quantity = quantity;
-            }
-        }
 
         public void UpdateOrderQuantity(Guid orderId,Guid userId, int quantity)
         {
@@ -38,6 +31,16 @@ namespace SalesManagementSystem.Services
             if(order is not null)
             {
                 order.Quantity = quantity;
+                order.Amount = GetTotalPrice(order, order.GoodId);
+            }
+        }
+
+        public void UpdateUserOrderStatus(Guid userId, Guid orderId, OrderStatus status)
+        {
+            Order order = GetUserOrder(userId, orderId);
+            if (order is not null)
+            {
+                order.OrderStatus = status;
             }
         }
 
@@ -50,5 +53,12 @@ namespace SalesManagementSystem.Services
             }
         }
 
+       
+        
+        private float GetTotalPrice(Order order,Guid goodId)
+        {
+            Good currentGood = GoodRepository.goods.FirstOrDefault(s => s.GoodId == goodId);
+            return order.Quantity * currentGood.Price; 
+        }
     }
 }

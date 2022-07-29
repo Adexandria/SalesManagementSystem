@@ -4,7 +4,7 @@ namespace SalesManagementSystem.Services
 {
     public class GoodRepository : IGood
     {
-        List<Good> goods = new();
+        public static readonly List<Good> goods = new();
 
         //Get all Goods in the database
         public List<Good> GetGoods

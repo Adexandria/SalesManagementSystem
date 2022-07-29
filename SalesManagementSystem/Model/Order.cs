@@ -8,7 +8,9 @@
         }
         public Guid OrderId { get; set; }
         public Guid CustomerId { get; set; }
-        public List<Good> Goods { get; set; } = new();
+        public Guid GoodId { get; set; } 
         public int Quantity { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+        public float Amount;
     }
 }
