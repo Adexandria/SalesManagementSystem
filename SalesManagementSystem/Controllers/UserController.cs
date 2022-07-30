@@ -15,14 +15,16 @@ namespace SalesManagementSystem.Controllers
             _user = user;
         }
         
+
+        //Create new user
         [HttpPost]
         public IActionResult CreateUser(User user)
         {
             bool usernameExist = _user.IsUsernameExist(user.Username);
             if (!usernameExist)
             {
-                _user.CreateUser(user);
-                return Ok("User created successfully");
+                Guid userId = _user.CreateUser(user);
+                return Ok($"User {userId} created successfully,");
             }
             return BadRequest("This username already exist");
         }

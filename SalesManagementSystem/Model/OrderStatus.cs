@@ -3,8 +3,6 @@
     public enum OrderStatus
     {
         NotPaid,  
-        Paid,
-        PaidFully
-            
+        Paid    
     }
 }

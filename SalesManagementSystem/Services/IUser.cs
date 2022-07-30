@@ -6,7 +6,7 @@ namespace SalesManagementSystem.Services
     {
         bool IsUserExist(Guid userId);
         bool IsUsernameExist(string username);
-        void CreateUser(User user);
+        Guid CreateUser(User user);
         void UpdateUserEmail(Guid userId, string email);
         void UpdateUserPassword(Guid userId, string password);
         void UpdateUserName(Guid userId, string username);

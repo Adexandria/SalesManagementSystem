@@ -7,12 +7,16 @@ namespace SalesManagementSystem.Services
     {
         List<User> users = new();
         
-        public void CreateUser(User user)
+        //create user
+        public Guid CreateUser(User user)
         {
+            user.UserId = Guid.NewGuid();
             EncryptPassword(user, user.Password);
             users.Add(user);
+            return user.UserId;
         }
         
+        //update user email
         public void UpdateUserEmail(Guid userId, string email)
         {
             User user = GetUser(userId);
@@ -22,6 +26,7 @@ namespace SalesManagementSystem.Services
             }
         }
 
+        //update user name
         public void UpdateUserName(Guid userId, string username)
         {
             User user = GetUser(userId);
@@ -31,6 +36,7 @@ namespace SalesManagementSystem.Services
             }
         }
 
+        //update user password
         public void UpdateUserPassword(Guid userId, string password)
         {
             User user = GetUser(userId);
@@ -40,24 +46,19 @@ namespace SalesManagementSystem.Services
             }
         }
 
-        public void DeleteUser(Guid userId)
-        {
-            User user = GetUser(userId);
-            if(user is not null)
-            {
-                users.Remove(user);
-            }
-        }
+        //Check if user exist
 
         public bool IsUserExist(Guid userId)
         {
             User user = GetUser(userId);
-            if(user is null)
+            if (user is null)
             {
                 return false;
             }
             return true;
         }
+        
+        //Check if username exist
 
         public bool IsUsernameExist(string username)
         {
@@ -68,14 +69,29 @@ namespace SalesManagementSystem.Services
             }
             return true;
         }
+
+        //Delete user
+        public void DeleteUser(Guid userId)
+        {
+            User user = GetUser(userId);
+            if(user is not null)
+            {
+                users.Remove(user);
+            }
+        }
+
+      
+
+        //Encrypt password
         
         private void EncryptPassword(User user,string password)
         {
-            //learn how to encode using utf8
-            var encodedPassword = Encoding.UTF8.GetBytes(user.Password).ToString();
-            user.Password = encodedPassword;
+            byte[] encodedPassword = Encoding.UTF8.GetBytes(password);
+            user.Password = Convert.ToBase64String(encodedPassword);
         }
 
+        
+        //Get user
         private User GetUser(Guid userId)
         {
             return users.FirstOrDefault(u => u.UserId == userId);

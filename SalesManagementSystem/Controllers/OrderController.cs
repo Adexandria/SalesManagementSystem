@@ -19,9 +19,11 @@ namespace SalesManagementSystem.Controllers
             _good = good;
         }
 
+        //Get existing user orders by userId
         [HttpGet]
         public IActionResult GetUserOrders(Guid userId)
         {
+            //Check if the user exist,if false returns not found
             bool isExist = _user.IsUserExist(userId);
             if (isExist)
             {
@@ -31,9 +33,12 @@ namespace SalesManagementSystem.Controllers
             return NotFound("User not found");
         }
 
+
+        //Get existing user order by orderId and userId
         [HttpGet("{orderId}", Name = "GetOrder")]
         public IActionResult GetOrder(Guid userId, Guid orderId)
         {
+            //Check if the user exist,if false returns not found
             bool isExist = _user.IsUserExist(userId);
             if (isExist)
             {
@@ -43,61 +48,83 @@ namespace SalesManagementSystem.Controllers
             return NotFound("User not found");
         }
 
+        //Create  new user order
         [HttpPost]
         public IActionResult CreateOrder(Guid userId, [FromBody] Order order)
         {
+            //Check if the user exist,if false returns not found
             bool isExist = _user.IsUserExist(userId);
-            Good currentGood = _good.GetGood(order.GoodId);
             if (!isExist)
             {
                 return NotFound("User not found");
             }
+            
+            //Get existing good by id, if null returns Not found
+            Good currentGood = _good.GetGood(order.GoodId);
             if (currentGood is null)
             {
                 return NotFound("item not found");
             }
-            if(order.Quantity > currentGood.Quantity)
+            
+            //If the quantity is less than the quantity in stock return not found
+            if (order.Quantity > currentGood.Quantity)
             {
                 return BadRequest("This quantity is unavailable");
             }
+            
             _order.CreateOrder(userId, order);
             return CreatedAtRoute("GetOrder", new { userId, orderId = order.OrderId }, order);
 
         }
 
+        //Update existing order quantity
         [HttpPut("{orderId}/Quantity")]
         public IActionResult UpdateOrderQuantity(Guid userId, Guid orderId,[FromBody] int quantity)
         {
+            //Check if the user exist,if false returns not found
             bool isExist = _user.IsUserExist(userId);
             if (!isExist)
             {
                 return NotFound("User not found");
             }
-
+            
+            //Get User Order, if null returns Not found
             Order currentOrder = _order.GetUserOrder(userId, orderId);
+            if(currentOrder is null)
+            {
+                return NotFound("item not found");
+            }
+            
+            //Get current good, if null returns Not found
             Good currentGood = _good.GetGood(currentOrder.GoodId);
+            if (currentGood is null)
+            {
+                return NotFound("item not found");
+            }
+            
+            //If the quantity is less than the quantity in stock return not found
             if (currentOrder.Quantity > currentGood.Quantity)
             {
                 return BadRequest("This quantity is unavailable");
             }
-
-            if (currentOrder is not null)
-            {
-                _order.UpdateOrderQuantity(orderId, userId, quantity);
-                return Ok("Updated successfully");
-            }
-            return NotFound("order not found");
+            
+            _order.UpdateOrderQuantity(orderId, userId, quantity);
+            return Ok("Updated successfully");
         }
 
+
+        //Delete Order by orderId
         [HttpDelete("{orderId}")]
         public IActionResult DeleteOrder(Guid userId, Guid orderId)
         {
+            //Check if the user exist,if false returns not found
             bool isExist = _user.IsUserExist(userId);
             if (!isExist)
             {
                 return NotFound("User not found");
             }
 
+            //Get User Order, if null returns Not found
             Order currentOrder = _order.GetUserOrder(userId, orderId);
             if (currentOrder is not null)
             {

@@ -6,6 +6,8 @@ namespace SalesManagementSystem.Services
     {
         List<Payment> payments = new();
         
+        
+        //Add new payment
         public bool AddPayment(Guid userId,Guid orderId, float amount)
         {
             Order currentOrder = OrderRepository.orders.FirstOrDefault(s => s.OrderId == orderId && s.CustomerId == userId);
@@ -22,12 +24,15 @@ namespace SalesManagementSystem.Services
             return false;
         }
 
+        //Get order payment
         public Payment GetOrderPayment(Guid orderId)
         {
             Payment payment = payments.FirstOrDefault(s => s.OrderId == orderId);
             return payment;
         }
 
+        
+        //Check if payment exist
         public bool IsPaymentValid(Guid orderId)
         {
             Payment currentPayment = payments.FirstOrDefault(s => s.OrderId == orderId);
@@ -38,6 +43,7 @@ namespace SalesManagementSystem.Services
             return false;
         }
 
+        //Update existing payment
         public bool UpdatePayment(Guid orderId, float amount)
         {
             Payment currentPayment = GetOrderPayment(orderId);
